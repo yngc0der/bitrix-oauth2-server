@@ -1,0 +1,20 @@
+{
+    "name": "yngc0der/bitrix-oauth2-server",
+    "type": "bitrix-d7-module",
+    "description": "",
+    "license": "MIT",
+    "authors": [{
+        "name": "yngc0der",
+        "email": "rg.archuser@gmail.com"
+    }],
+    "require": {
+        "php": "^7.1.3",
+        "composer/installers": "^1.9.0",
+        "league/oauth2-server": "^8.3",
+        "psr/http-message": "^1.0",
+        "guzzlehttp/psr7": "^2.1"
+    },
+    "extra": {
+        "installer-name": "oauth2server"
+    }
+}
