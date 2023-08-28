@@ -11,10 +11,7 @@ use Yngc0der\OAuth2Server\Tables\TokensTable;
 
 class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
+    public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity): void
     {
         TokensTable::add([
             'ID' => $accessTokenEntity->getIdentifier(),
@@ -27,18 +24,12 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function revokeAccessToken($tokenId)
+    public function revokeAccessToken($tokenId): void
     {
         TokensTable::update($tokenId, ['IS_REVOKED' => true]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isAccessTokenRevoked($tokenId)
+    public function isAccessTokenRevoked($tokenId): bool
     {
         $token = TokensTable::query()
             ->addSelect('ID')
@@ -53,11 +44,11 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
-    {
+    public function getNewToken(
+        ClientEntityInterface $clientEntity,
+        array $scopes,
+        $userIdentifier = null
+    ): AccessTokenEntity {
         $accessToken = new AccessTokenEntity();
         $accessToken->setClient($clientEntity);
         foreach ($scopes as $scope) {

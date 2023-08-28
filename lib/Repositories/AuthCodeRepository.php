@@ -10,10 +10,7 @@ use Yngc0der\OAuth2Server\Tables\AuthCodesTable;
 
 class AuthCodeRepository implements AuthCodeRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity)
+    public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity): void
     {
         AuthCodesTable::add([
             'ID' => $authCodeEntity->getIdentifier(),
@@ -26,18 +23,12 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function revokeAuthCode($codeId)
+    public function revokeAuthCode($codeId): void
     {
         AuthCodesTable::update($codeId, ['IS_REVOKED' => true]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isAuthCodeRevoked($codeId)
+    public function isAuthCodeRevoked($codeId): bool
     {
         $authCode = AuthCodesTable::query()
             ->addSelect('ID')
@@ -52,10 +43,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getNewAuthCode()
+    public function getNewAuthCode(): AuthCodeEntity
     {
         return new AuthCodeEntity();
     }

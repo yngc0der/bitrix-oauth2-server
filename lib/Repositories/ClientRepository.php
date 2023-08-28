@@ -9,10 +9,7 @@ use Yngc0der\OAuth2Server\Tables\ClientsTable;
 
 class ClientRepository implements ClientRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getClientEntity($clientIdentifier)
+    public function getClientEntity($clientIdentifier): ?ClientEntity
     {
         $client = ClientsTable::query()
             ->addSelect('*')
@@ -35,10 +32,7 @@ class ClientRepository implements ClientRepositoryInterface
         return $clientEntity;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function validateClient($clientIdentifier, $clientSecret, $grantType)
+    public function validateClient($clientIdentifier, $clientSecret, $grantType): bool
     {
         $client = ClientsTable::query()
             ->enablePrivateFields()

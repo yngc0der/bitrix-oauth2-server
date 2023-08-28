@@ -10,15 +10,12 @@ use Yngc0der\OAuth2Server\Entity\UserEntity;
 
 class UserRepository implements UserRepositoryInterface
 {
-    /**
-     * {@inheritDoc}
-     */
     public function getUserEntityByUserCredentials(
         $username,
         $password,
         $grantType,
         ClientEntityInterface $clientEntity
-    ) {
+    ): ?UserEntity {
         $user = UserTable::query()
             ->enablePrivateFields()
             ->addSelect('ID')

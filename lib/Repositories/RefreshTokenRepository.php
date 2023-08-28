@@ -10,10 +10,7 @@ use Yngc0der\OAuth2Server\Tables\RefreshTokensTable;
 
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
+    public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity): void
     {
         RefreshTokensTable::add([
             'ID' => $refreshTokenEntity->getIdentifier(),
@@ -23,18 +20,12 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function revokeRefreshToken($tokenId)
+    public function revokeRefreshToken($tokenId): void
     {
         RefreshTokensTable::update($tokenId, ['IS_REVOKED' => true]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isRefreshTokenRevoked($tokenId)
+    public function isRefreshTokenRevoked($tokenId): bool
     {
         $refreshToken = RefreshTokensTable::query()
             ->addSelect('ID')
@@ -49,10 +40,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getNewRefreshToken()
+    public function getNewRefreshToken(): RefreshTokenEntity
     {
         return new RefreshTokenEntity();
     }
