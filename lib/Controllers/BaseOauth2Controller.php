@@ -4,6 +4,7 @@ namespace Yngc0der\OAuth2Server\Controllers;
 
 use Bitrix\Main\Engine\Action;
 use Bitrix\Main\Engine\Controller;
+use Bitrix\Main\Engine\JsonPayload;
 use Bitrix\Main\HttpResponse;
 use Bitrix\Main\HttpRequest;
 use Bitrix\Main\Web\HttpHeaders;
@@ -76,13 +77,21 @@ abstract class BaseOauth2Controller extends Controller
             $request->getServer()->toArray()
         );
 
-        return $serverRequest
+        $serverRequest = $serverRequest
             ->withCookieParams($request->getCookieList()->getValues())
             ->withQueryParams($request->getQueryList()->getValues())
             ->withParsedBody($request->getPostList()->getValues())
             ->withUploadedFiles(\GuzzleHttp\Psr7\ServerRequest::normalizeFiles(
                 $request->getFileList()->getValues()
             ));
+
+        try {
+            $serverRequest = $serverRequest->withParsedBody((new JsonPayload())->getData());
+        } catch (\Exception $e) {
+            $serverRequest = $serverRequest->withParsedBody($request->getPostList()->getValues());
+        }
+
+        return $serverRequest;
     }
 
     private function createPsrResponse(HttpResponse $response): ResponseInterface
