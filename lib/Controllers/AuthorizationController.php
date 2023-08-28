@@ -2,6 +2,7 @@
 
 namespace Yngc0der\OAuth2Server\Controllers;
 
+use Bitrix\Main\Engine\ActionFilter;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,11 +14,9 @@ class AuthorizationController extends BaseOauth2Controller
     {
         return [
             'authorize' => [
-                'prefilters' => [],
-                'postfilters' => [],
-            ],
-            'token' => [
-                'prefilters' => [],
+                'prefilters' => [
+                    new ActionFilter\Authentication(true),
+                ],
                 'postfilters' => [],
             ],
         ];
@@ -27,23 +26,14 @@ class AuthorizationController extends BaseOauth2Controller
     {
         try {
             $authRequest = $this->server->validateAuthorizationRequest($request);
-            $authRequest->setUser(new UserEntity());
+
+            $userEntity = new UserEntity();
+            $userEntity->setIdentifier((string)$this->getCurrentUser()->getId());
+
+            $authRequest->setUser($userEntity);
             $authRequest->setAuthorizationApproved(true);
 
             return $this->server->completeAuthorizationRequest($authRequest, $response);
-        } catch (OAuthServerException $exception) {
-            return $exception->generateHttpResponse($response);
-        } catch (\Exception $exception) {
-            return $response
-                ->withStatus(500)
-                ->withBody(\GuzzleHttp\Psr7\Utils::streamFor($exception->getMessage()));
-        }
-    }
-
-    public function tokenAction(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
-    {
-        try {
-            return $this->server->respondToAccessTokenRequest($request, $response);
         } catch (OAuthServerException $exception) {
             return $exception->generateHttpResponse($response);
         } catch (\Exception $exception) {
