@@ -90,7 +90,7 @@ class yngc0der_oauth2server extends CModule
     {
         /** @var CMain $APPLICATION */
         global $APPLICATION;
-        
+
         $connection = Application::getConnection();
         $errors = $connection->executeSqlBatch(file_get_contents($this->getPath() . '/install/mysql/uninstall.sql'));
         if (count($errors) > 0) {
